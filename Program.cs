@@ -6,18 +6,9 @@ namespace expense_tracker
     {
         static void Main(string[] args)
         {
-            Expense expense = new Expense();
-            expense.Id = 1;
-            expense.Amount = 100.50m;
-            expense.Category = "Food";
-            expense.Date = DateOnly.FromDateTime(DateTime.Now);
-            expense.Note = "Lunch at a restaurant";
+            Expense expense = new Expense(1, 100.50m, "Food", DateOnly.FromDateTime(DateTime.Now), "Lunch at a restaurant");
 
-            Console.WriteLine("expense: " + expense.Id.ToString()
-                            + ", Amount: " + expense.Amount.ToString()
-                            + ", Category: " + expense.Category
-                            + ", Date: " + expense.Date.ToString()
-                            + ", Note: " + expense.Note);
+            Console.WriteLine(expense.ToString());
 
         }
     }

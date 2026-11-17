@@ -12,5 +12,18 @@ namespace expense_tracker.Models
         public string Category { get; set; }
         public DateOnly Date { get; set; }
         public String? Note {get; set;}
+
+        public Expense(int id, decimal amount, string category, DateOnly date, string? note)
+        {
+            Id = id;
+            Amount = amount;
+            Category = category;
+            Date = date;
+            Note = note;
+        }
+        public override string ToString()
+        {
+            return $"Expense Id: {Id}, Amount: {Amount:C}, Category: {Category}, Date: {Date.ToShortDateString()}, Note: {Note}";
+        }
     }
 }
