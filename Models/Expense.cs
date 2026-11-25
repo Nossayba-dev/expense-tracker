@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Runtime.InteropServices;
-using System.Text;
-
-namespace expense_tracker.Models
+﻿namespace expense_tracker.Models
 {
     internal class Expense
     {
@@ -11,7 +6,7 @@ namespace expense_tracker.Models
         public decimal Amount { get; set; }
         public string Category { get; set; }
         public DateOnly Date { get; set; }
-        public String? Note {get; set;}
+        public string? Note {get; set;}
 
         public Expense(int id, decimal amount, string category, DateOnly date, string? note)
         {
@@ -23,7 +18,7 @@ namespace expense_tracker.Models
         }
         public override string ToString()
         {
-            return $"Expense Id: {Id}, Amount: {Amount:C}, Category: {Category}, Date: {Date.ToShortDateString()}, Note: {Note}";
+            return $"Expense Id: {Id}, Amount: {Amount:MAD}, Category: {Category}, Date: {Date.ToShortDateString()}, Note: {Note}";
         }
     }
 }
