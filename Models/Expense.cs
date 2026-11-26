@@ -18,7 +18,7 @@
         }
         public override string ToString()
         {
-            return $"Expense Id: {Id}, Amount: {Amount:MAD}, Category: {Category}, Date: {Date.ToShortDateString()}, Note: {Note}";
+            return $"Expense Id: {Id}, Amount: {Amount} MAD, Category: {Category}, Date: {Date.ToShortDateString()}, Note: {Note}";
         }
     }
 }
