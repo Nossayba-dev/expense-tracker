@@ -1,11 +1,25 @@
 ﻿using expense_tracker.Models;
+using System.Text.Json;
 
 namespace expense_tracker
 {
     internal class Program
     {
-        static List<Expense> expenses = new();
-        static public void AddExpense()
+        
+        // Method to write data to a JSON file
+        static async Task WriteJsonToFileAsync(string filePath, List<Expense> expenses)
+        {
+            string json = JsonSerializer.Serialize(expenses, new JsonSerializerOptions { WriteIndented = true });
+            await File.WriteAllTextAsync(filePath, json);
+        }
+
+        // Method to read data from a JSON file
+        static async Task<List<Expense>> ReadJsonFromFileAsync(string filePath)
+        {
+            string json = await File.ReadAllTextAsync(filePath);
+            return JsonSerializer.Deserialize<List<Expense>>(json) ?? new List<Expense>() ;
+        }
+        static async Task AddExpense(List<Expense> expenses, string filePath)
         {
             Console.WriteLine("Enter the amount:");
             decimal amount;
@@ -34,10 +48,13 @@ namespace expense_tracker
             int id = (expenses.Count == 0 ? 1 : expenses.Max(e => e.Id) + 1);
             Expense newExpense = new Expense(id, amount, category, date, note);
             expenses.Add(newExpense);
+            await WriteJsonToFileAsync(filePath, expenses);
             Console.WriteLine("Expense added successfully!");
         }
-        static public void ViewExpenses()
+        static public void ViewExpenses(List<Expense> expenses)
         {
+            
+
             if (expenses.Count == 0)
             {
                 Console.WriteLine("No expenses recorded.");
@@ -49,8 +66,9 @@ namespace expense_tracker
                 Console.WriteLine(expense);
             }
         }
-        static public void DeleteExpense()
+        static async Task DeleteExpense(List<Expense> expenses, string filePath)
         {
+            
             Console.WriteLine("Enter the Id of the expense to delete:");
             int id ;
             while (!int.TryParse(Console.ReadLine(), out id))
@@ -61,6 +79,7 @@ namespace expense_tracker
             if (expenseToRemove != null)
             {
                 expenses.Remove(expenseToRemove);
+                await WriteJsonToFileAsync(filePath, expenses);
                 Console.WriteLine("Expense deleted successfully!");
             }
             else
@@ -70,9 +89,15 @@ namespace expense_tracker
         }
 
 
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
             Console.WriteLine("Welcome to the Expense Tracker!");
+            const string filePath = "expenses.json";
+
+            List<Expense> expenses = File.Exists(filePath)
+                ? await ReadJsonFromFileAsync(filePath)
+                : new List<Expense>();
+
             while (true)
             {
                 Console.WriteLine("1. Add an expense");
@@ -80,31 +105,30 @@ namespace expense_tracker
                 Console.WriteLine("3. Delete an expense");
                 Console.WriteLine("4. Exit");
 
-
                 Console.WriteLine("Please select an option (1-4):");
+
                 string? choice = Console.ReadLine();
                 switch (choice)
                 {
                     case "1":
-                        AddExpense();
+                        await AddExpense(expenses, filePath);
                         break;
                     case "2":
-                        ViewExpenses();
+                        ViewExpenses(expenses);
                         break;
                     case "3":
-                        DeleteExpense();
+                        await DeleteExpense(expenses, filePath);
                         break;
                     case "4":
-                        Console.WriteLine("Exiting the application. Goodbye!");
+                        Console.WriteLine("Goodbye!");
                         return;
                     default:
                         Console.WriteLine("Invalid option. Please try again.");
                         break;
                 }
-                
-              
             }
         }
+    
     }
 }
 
